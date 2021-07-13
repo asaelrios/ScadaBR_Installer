@@ -1,15 +1,9 @@
-FROM debian:8
+FROM tomcat:6.0
 
-#Update repos and install packages
-RUN apt-get update
-RUN apt-get install -y wget git sudo time
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-#Build the app
-COPY . /tmp/ScadaBR_Installer
-WORKDIR /tmp/ScadaBR_Installer
-RUN ./install_scadabr.sh
-WORKDIR /
-RUN rm -r /tmp/ScadaBR_Installer
+COPY ./ScadaBR.war /usr/local/tomcat/webapps/ROOT.war
 
-#Start the server
-CMD sudo /opt/tomcat6/apache-tomcat-6.0.53/bin/startup.sh && sleep infinity
+COPY ./server.xml /usr/local/tomcat/conf/server.xml
+
+CMD ["catalina.sh","run"]
